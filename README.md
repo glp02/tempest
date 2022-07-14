@@ -1,4 +1,10 @@
 # tempest
-Git Good's SEA project. "GetYourWay.com" travel web app.
+Team Git Good's Sky Software Engineering Academy group project. 
 
-Make sure to have maven installed.
+"GetYourWay.com" travel web app.
+
+to clone the repo, use the following command:
+
+````
+git clone git@github.com:glp02/tempest
+````
