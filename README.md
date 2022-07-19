@@ -21,6 +21,12 @@ git commit -m "TMP-4 <message>"
 
 ***
 
+Make sure you've setup your database according to 
+<a href="https://github.com/glp02/tempest/wiki/Database-Setup-Entry">these</a>
+instructions.
+
+***
+
 To run the application, go into `src/main/java/com.sky.tempest/TempestApplication.java` and run the class.
 
 To shut down, there should be a red stop button at the top of your IDE.
