@@ -19,3 +19,8 @@ or
 git commit -m "TMP-4 <message>"
 ````
 
+***
+
+To run the application, go into `src/main/java/com.sky.tempest/TempestApplication.java` and run the class.
+
+To shut down, there should be a red stop button at the top of your IDE.
