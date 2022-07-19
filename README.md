@@ -18,3 +18,5 @@ or
 ````
 git commit -m "TMP-4 <message>"
 ````
+
+Make sure you download <a href = https://dev.mysql.com/downloads/mysql/> MySQL</a> with the ARM MacOS 12 dmg. 
