@@ -8,47 +8,80 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserRepository userRepository;
-    @PostMapping("/users/register")
-    public Status registerUser(@Valid @RequestBody User newUser) {
+    @PostMapping("/auth/register")
+    public AuthStatus registerUser(
+            @Valid @RequestParam(name = "email") String email,
+            @Valid @RequestParam(name = "first_name") String firstName,
+            @Valid @RequestParam(name = "last_name") String lastName,
+            @Valid @RequestParam(name = "password") String password) {
+
         List<User> users = userRepository.findAll();
-        System.out.println("New user: " + newUser.toString());
         for (User user : users) {
-            System.out.println("Registered user: " + newUser.toString());
-            if (user.equals(newUser)) {
+            if (user.getEmail().equals(email)) {
                 System.out.println("User Already exists!");
-                return Status.USER_ALREADY_EXISTS;
+                return AuthStatus.USER_ALREADY_EXISTS;
             }
         }
+        User newUser = new User(email,firstName,lastName,password);
+        System.out.println("Registered user: " + newUser.toString());
         userRepository.save(newUser);
-        return Status.SUCCESS;
+        return AuthStatus.SUCCESS;
     }
-    @PostMapping("/users/login")
-    public Status loginUser(@Valid @RequestBody User user) {
+
+    @PostMapping("/auth/login")
+    public AuthStatus loginUser(
+            @Valid @RequestParam(name="email") String email,
+            @Valid @RequestParam(name = "password") String password){
         List<User> users = userRepository.findAll();
-        for (User other : users) {
-            if (other.equals(user)) {
-                user.setLoggedIn(true);
-                userRepository.save(user);
-                return Status.SUCCESS;
+        for (User user : users) {
+            System.out.println(user.toString());
+            if (user.credentialsMatch(email, password)) {
+                return AuthStatus.SUCCESS;
             }
         }
-        return Status.FAILURE;
+        return AuthStatus.FAILURE;
     }
-    @PostMapping("/users/logout")
-    public Status logUserOut(@Valid @RequestBody User user) {
+
+    @PostMapping("/auth/logout")
+    public AuthStatus logUserOut(
+            @Valid @RequestParam(name="email") String email,
+            @Valid @RequestParam(name = "password") String password) {
         List<User> users = userRepository.findAll();
-        for (User other : users) {
-            if (other.equals(user)) {
-                user.setLoggedIn(false);
-                userRepository.save(user);
-                return Status.SUCCESS;
+        for (User user : users) {
+            if (user.credentialsMatch(email,password) ) {
+                return AuthStatus.SUCCESS;
             }
         }
-        return Status.FAILURE;
+        return AuthStatus.FAILURE;
     }
-    @DeleteMapping("/users/all")
-    public Status deleteUsers() {
+
+    @PatchMapping("/auth/change_password")
+    public AuthStatus changePassword(
+            @Valid @RequestParam(name="email") String email,
+            @Valid @RequestParam(name = "password") String password,
+            @Valid @RequestParam(name= "new_password") String newPassword){
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            if (user.credentialsMatch(email,password)) {
+                System.out.println(user.toString() + " password changed to " + newPassword);
+                user.setPassword(newPassword);
+                userRepository.save(user);
+                return AuthStatus.SUCCESS;
+            }
+        }
+        return AuthStatus.FAILURE;
+    }
+
+
+
+    @DeleteMapping("/auth/all")
+    public AuthStatus deleteUsers() {
         userRepository.deleteAll();
-        return Status.SUCCESS;
+        return AuthStatus.SUCCESS;
+    }
+
+    @GetMapping("auth/all")
+    public String getUsers(){
+        return userRepository.findAll().toString();
     }
 }
