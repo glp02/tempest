@@ -1,13 +1,18 @@
 package com.sky.tempest.user;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import java.util.Objects;
 @Entity
 @Table(name = "users")
+@Data
+@ToString
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,26 +34,8 @@ public class User {
     private String lastName;
 
     @Column(nullable = false)
-    private @NotBlank String password;
-
-    public User() {
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    @NotBlank
+    private String password;
 
     public User(@NotBlank String email,
                 @NotBlank String firstName,
@@ -60,45 +47,7 @@ public class User {
         setLastName(lastName);
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public long getId() {
-        return id;
-    }
-    private String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean credentialsMatch(String email, String attemptedPassword) {
-        return( this.getEmail().equals(email) && this.getPassword().equals(attemptedPassword));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.getId());
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public boolean passwordMatches(String attemptedPassword) {
+        return(this.getPassword().equals(attemptedPassword));
     }
 }

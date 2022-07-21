@@ -32,7 +32,7 @@ public class UserController {
     public AuthStatus logoutUser(
             @Valid @RequestParam(name="email") String email,
             @Valid @RequestParam(name = "password") String password) {
-        return service.logUserOut(email, password);
+        return service.logoutUser(email, password);
     }
 
     @PatchMapping("/auth/change_password")

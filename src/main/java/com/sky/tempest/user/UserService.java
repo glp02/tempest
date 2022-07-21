@@ -1,5 +1,6 @@
 package com.sky.tempest.user;
 
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +8,7 @@ import java.util.Optional;
 
 
 @Service
+@NoArgsConstructor
 public class UserService {
     @Autowired
     UserRepository repository;
@@ -26,15 +28,15 @@ public class UserService {
 
     public AuthStatus loginUser(String email, String password){
         Optional<User> optionalUser = repository.findUserByEmail(email);
-        if(optionalUser.isPresent() && optionalUser.get().credentialsMatch(email, password))
+        if(optionalUser.isPresent() && optionalUser.get().passwordMatches(password))
             return AuthStatus.SUCCESS;
         else
             return AuthStatus.FAILURE;
     }
 
-    public AuthStatus logUserOut(String email, String password) {
+    public AuthStatus logoutUser(String email, String password) {
         Optional<User> optionalUser = repository.findUserByEmail(email);
-        if(optionalUser.isPresent() && optionalUser.get().credentialsMatch(email, password))
+        if(optionalUser.isPresent() && optionalUser.get().passwordMatches(password))
             return AuthStatus.SUCCESS;
         else
             return AuthStatus.FAILURE;
@@ -42,7 +44,7 @@ public class UserService {
 
     public AuthStatus changePassword(String email, String password, String newPassword){
         Optional<User> optionalUser = repository.findUserByEmail(email);
-        if(optionalUser.isPresent() && optionalUser.get().credentialsMatch(email,password)){
+        if(optionalUser.isPresent() && optionalUser.get().passwordMatches(password)){
             User user = optionalUser.get();
             System.out.println(user.toString() + " password changed to " + newPassword);
             user.setPassword(newPassword);
@@ -55,7 +57,7 @@ public class UserService {
 
     public AuthStatus deleteUser(String email, String password){
         Optional<User> optionalUser = repository.findUserByEmail(email);
-        if(optionalUser.isPresent() && optionalUser.get().credentialsMatch(email,password)){
+        if(optionalUser.isPresent() && optionalUser.get().passwordMatches(password)){
                 return AuthStatus.SUCCESS;
         } else {
             return AuthStatus.FAILURE;
