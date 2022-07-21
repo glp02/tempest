@@ -1,6 +1,12 @@
 package com.sky.tempest.user;
 
+import com.sky.tempest.user.entities.User;
+import com.sky.tempest.user.entities.UserDTO;
+import com.sky.tempest.user.exceptions.UserAlreadyExistsException;
+import com.sky.tempest.user.exceptions.UserNotFoundException;
+import com.sky.tempest.user.exceptions.WrongPasswordException;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,57 +17,58 @@ import java.util.Optional;
 @NoArgsConstructor
 public class UserService {
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
 
-    public AuthStatus registerUser(String email, String firstName, String lastName, String password) {
+    @Autowired
+    private ModelMapper mapper;
+
+    private UserDTO maptoDTO(User user){
+        return this.mapper.map(user, UserDTO.class);
+    }
+
+    public UserDTO registerUser(String email, String firstName, String lastName, String password) {
         Optional<User> optionalUser = repository.findUserByEmail(email);
         if(optionalUser.isEmpty()){
             User newUser = new User(email,firstName,lastName,password);
             repository.save(newUser);
             System.out.println("Registered user: " + newUser);
-            return AuthStatus.SUCCESS;
+            return maptoDTO(newUser);
         } else {
-            System.out.println("User Already exists with email " + email);
-            return AuthStatus.USER_ALREADY_EXISTS;
+            throw new UserAlreadyExistsException();
         }
     }
 
-    public AuthStatus loginUser(String email, String password){
-        Optional<User> optionalUser = repository.findUserByEmail(email);
-        if(optionalUser.isPresent() && optionalUser.get().passwordMatches(password))
-            return AuthStatus.SUCCESS;
-        else
-            return AuthStatus.FAILURE;
+    public UserDTO loginUser(String email, String password) {
+        User user = this.repository.findUserByEmail(email).orElseThrow(UserNotFoundException:: new);
+        if(user.passwordMatches(password)){
+            return this.maptoDTO(user);
+        } else{
+            return null;
+        }
+
     }
 
-    public AuthStatus logoutUser(String email, String password) {
-        Optional<User> optionalUser = repository.findUserByEmail(email);
-        if(optionalUser.isPresent() && optionalUser.get().passwordMatches(password))
-            return AuthStatus.SUCCESS;
-        else
-            return AuthStatus.FAILURE;
+    public UserDTO logoutUser(String email, String password) {
+        User user = this.repository.findUserByEmail(email).orElseThrow(UserNotFoundException:: new);
+        return this.maptoDTO(user);
     }
 
-    public AuthStatus changePassword(String email, String password, String newPassword){
+    public UserDTO changePassword(String email, String password, String newPassword) throws WrongPasswordException {
         Optional<User> optionalUser = repository.findUserByEmail(email);
         if(optionalUser.isPresent() && optionalUser.get().passwordMatches(password)){
             User user = optionalUser.get();
             System.out.println(user.toString() + " password changed to " + newPassword);
             user.setPassword(newPassword);
             repository.save(user);
-            return AuthStatus.SUCCESS;
+            return maptoDTO(user);
         } else {
-            return AuthStatus.FAILURE;
+            throw new WrongPasswordException();
         }
     }
 
-    public AuthStatus deleteUser(String email, String password){
-        Optional<User> optionalUser = repository.findUserByEmail(email);
-        if(optionalUser.isPresent() && optionalUser.get().passwordMatches(password)){
-                return AuthStatus.SUCCESS;
-        } else {
-            return AuthStatus.FAILURE;
-        }
+    public UserDTO deleteUser(String email, String password){
+        User user = repository.findUserByEmail(email).orElseThrow(UserNotFoundException:: new);
+        return maptoDTO(user);
     }
 
     public String getUsers(){

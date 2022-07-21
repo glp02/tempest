@@ -1,5 +1,7 @@
 package com.sky.tempest.user;
 
+import com.sky.tempest.user.entities.UserDTO;
+import com.sky.tempest.user.exceptions.WrongPasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
@@ -10,7 +12,7 @@ public class UserController {
     private UserService service;
 
     @PostMapping("/auth/register")
-    public AuthStatus registerUser(
+    public UserDTO registerUser(
             @Valid @RequestParam(name = "email") String email,
             @Valid @RequestParam(name = "first_name") String firstName,
             @Valid @RequestParam(name = "last_name") String lastName,
@@ -22,29 +24,30 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public AuthStatus loginUser(
+    public UserDTO loginUser(
             @Valid @RequestParam(name="email") String email,
             @Valid @RequestParam(name = "password") String password){
         return service.loginUser(email, password);
     }
 
     @PostMapping("/auth/logout")
-    public AuthStatus logoutUser(
+    public UserDTO logoutUser(
             @Valid @RequestParam(name="email") String email,
             @Valid @RequestParam(name = "password") String password) {
         return service.logoutUser(email, password);
     }
 
     @PatchMapping("/auth/change_password")
-    public AuthStatus changePassword(
+    public UserDTO changePassword(
             @Valid @RequestParam(name="email") String email,
             @Valid @RequestParam(name = "password") String password,
-            @Valid @RequestParam(name= "new_password") String newPassword){
+            @Valid @RequestParam(name= "new_password") String newPassword)
+            throws WrongPasswordException {
         return service.changePassword(email, password, newPassword);
     }
 
     @DeleteMapping("/auth/delete_account")
-    public AuthStatus deleteUser(
+    public UserDTO deleteUser(
         @Valid @RequestParam(name="email") String email,
         @Valid @RequestParam(name = "password") String password){
             return service.deleteUser(email, password);

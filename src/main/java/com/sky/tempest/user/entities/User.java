@@ -1,8 +1,11 @@
-package com.sky.tempest.user;
+package com.sky.tempest.user.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.val;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,6 +21,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     @Column(unique = true,nullable = false,name = "user_id")
+    @val
+    //@OnDelete(action = OnDeleteAction.NO_ACTION)
     private long id;
 
     @NotNull
