@@ -1,23 +1,31 @@
 package com.sky.tempest.user;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Objects;
 @Entity
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     @Column(unique = true,nullable = false,name = "user_id")
     private long id;
 
+    @NotNull
+    @Email
     @Column(unique = true,nullable = false, name = "user_email")
     private @NotBlank String email;
 
     @Column(nullable = false, name = "user_first_name")
+    @NotBlank
     private String firstName;
 
     @Column(nullable = false, name = "user_last_name")
+    @NotBlank
     private String lastName;
 
     @Column(nullable = false)

@@ -1,23 +1,23 @@
 package com.sky.tempest.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 @RestController
 public class UserController {
 
-    private final UserService service;
-
-    public UserController(UserService service){
-        super();
-        this.service=service;
-    }
+    @Autowired
+    private UserService service;
 
     @PostMapping("/auth/register")
     public AuthStatus registerUser(
             @Valid @RequestParam(name = "email") String email,
             @Valid @RequestParam(name = "first_name") String firstName,
             @Valid @RequestParam(name = "last_name") String lastName,
-            @Valid @RequestParam(name = "password") String password) {
+            @Valid @RequestParam(name = "password")
+            //Line below adds constraints on password.
+            //@Pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$")
+            String password) {
         return service.registerUser(email, firstName, lastName, password);
     }
 
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/logout")
-    public AuthStatus logUserOut(
+    public AuthStatus logoutUser(
             @Valid @RequestParam(name="email") String email,
             @Valid @RequestParam(name = "password") String password) {
         return service.logUserOut(email, password);
