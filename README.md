@@ -1,4 +1,4 @@
-# Tempest
+# tempest
 Team Git Good's Sky Software Engineering Academy group project. "GetYourWay.com" travel web app.
 
 to clone the repo, use the following command:
@@ -19,4 +19,14 @@ or
 git commit -m "TMP-4 <message>"
 ````
 
-Make sure you download <a href = https://dev.mysql.com/downloads/mysql/> MySQL</a> with the ARM MacOS 12 dmg. 
+***
+
+Make sure you've setup your database according to 
+<a href="https://github.com/glp02/tempest/wiki/Database-Setup-Entry">these</a>
+instructions.
+
+***
+
+To run the application, go into `src/main/java/com.sky.tempest/TempestApplication.java` and run the class.
+
+To shut down, there should be a red stop button at the top of your IDE.
