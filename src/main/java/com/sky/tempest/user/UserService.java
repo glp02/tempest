@@ -38,19 +38,22 @@ public class UserService {
         }
     }
 
-    public UserDTO loginUser(String email, String password) {
+    public UserDTO loginUser(String email, String password) throws WrongPasswordException {
         User user = this.repository.findUserByEmail(email).orElseThrow(UserNotFoundException:: new);
         if(user.passwordMatches(password)){
             return this.maptoDTO(user);
         } else{
-            return null;
+            throw new WrongPasswordException();
         }
-
     }
 
-    public UserDTO logoutUser(String email, String password) {
+    public UserDTO logoutUser(String email, String password) throws WrongPasswordException {
         User user = this.repository.findUserByEmail(email).orElseThrow(UserNotFoundException:: new);
-        return this.maptoDTO(user);
+        if(user.passwordMatches(password)){
+            return this.maptoDTO(user);
+        } else{
+            throw new WrongPasswordException();
+        }
     }
 
     public UserDTO changePassword(String email, String password, String newPassword) throws WrongPasswordException {
@@ -66,9 +69,14 @@ public class UserService {
         }
     }
 
-    public UserDTO deleteUser(String email, String password){
+    public UserDTO deleteUser(String email, String password) throws WrongPasswordException {
         User user = repository.findUserByEmail(email).orElseThrow(UserNotFoundException:: new);
-        return maptoDTO(user);
+        if(user.passwordMatches(password)){
+            repository.delete(user);
+            return maptoDTO(user);
+        } else {
+            throw new WrongPasswordException();
+        }
     }
 
     public String getUsers(){

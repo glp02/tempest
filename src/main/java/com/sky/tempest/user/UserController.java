@@ -26,14 +26,14 @@ public class UserController {
     @PostMapping("/auth/login")
     public UserDTO loginUser(
             @Valid @RequestParam(name="email") String email,
-            @Valid @RequestParam(name = "password") String password){
+            @Valid @RequestParam(name = "password") String password) throws WrongPasswordException {
         return service.loginUser(email, password);
     }
 
     @PostMapping("/auth/logout")
     public UserDTO logoutUser(
             @Valid @RequestParam(name="email") String email,
-            @Valid @RequestParam(name = "password") String password) {
+            @Valid @RequestParam(name = "password") String password) throws WrongPasswordException {
         return service.logoutUser(email, password);
     }
 
@@ -49,7 +49,7 @@ public class UserController {
     @DeleteMapping("/auth/delete_account")
     public UserDTO deleteUser(
         @Valid @RequestParam(name="email") String email,
-        @Valid @RequestParam(name = "password") String password){
+        @Valid @RequestParam(name = "password") String password) throws WrongPasswordException {
             return service.deleteUser(email, password);
     }
 
