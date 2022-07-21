@@ -14,10 +14,10 @@ public class User {
     @Column(unique = true,nullable = false, name = "user_email")
     private @NotBlank String email;
 
-    @Column(unique = true,nullable = false, name = "user_first_name")
+    @Column(nullable = false, name = "user_first_name")
     private String firstName;
 
-    @Column(unique = true,nullable = false, name = "user_last_name")
+    @Column(nullable = false, name = "user_last_name")
     private String lastName;
 
     @Column(nullable = false)
