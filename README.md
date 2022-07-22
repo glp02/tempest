@@ -19,6 +19,8 @@ git checkout -b TMP-4-login-research
 
 Make sure you download <a href = https://dev.mysql.com/downloads/mysql/> MySQL</a> with the ARM MacOS 12 dmg.
 
+Open up a terminal and type in `mysql -u root -p`, and type in your password (should be blank by default, in which case you can drop the `-p`). You should have started up a terminal interface for mysql that looks like: 
+
 ````
 mysql>
 ````
@@ -36,8 +38,13 @@ then you may have to change the `spring.datasource.password` variable in the `ap
 
 The application should stay running unless you manually shut it down now, and you can interact with it on terminal.
 
-You can see changes to the databases with MySQL Workbench, to delete a database manually go into mysql and use:
+You can see changes to the databases with MySQL Workbench. 
+The application is configured so that the tables in the dev database will be created on startup and destroyed on shutdown, while the prod db will persist.
+
+To delete a database manually go into mysql and use:
 `DROP DATABASE <database_name>`
+
+
 
 ***
 
