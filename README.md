@@ -7,25 +7,41 @@ to clone the repo, use the following command:
 git clone git@github.com:glp02/tempest
 ````
 
-Make sure start branch names and commits with the code of the ticket you're working on, e.g. for ticket TMP-4:
+Make sure start branch names with the Jira code of the ticket you're working on, e.g. for ticket TMP-4:
 
 ````
 git checkout -b TMP-4-login-research
 ````
 
-or 
+***
+
+<h3>Setting up your database connection</h3>
+
+Make sure you download <a href = https://dev.mysql.com/downloads/mysql/> MySQL</a> with the ARM MacOS 12 dmg.
 
 ````
-git commit -m "TMP-4 <message>"
+mysql>
 ````
+
+Type in `SHOW DATABASES;` to see a list of databases.
+(Don't forget the semicolon).
+Add a developer environment database with `CREATE DATABASE tempest_dev;`
+Add a production database with `CREATE DATABASE tempest_prod;`
+Check that it's been added, then type `exit;`.
+
+
+When you run the application (see below) now, the console should output a lot of text and no "application failed" or exceptions should be thrown. 
+If there are `java.sql.SQLException: Access denied for user 'root'@'localhost (using password: YES)` exceptions thrown 
+then you may have to change the `spring.datasource.password` variable in the `application.properties` file.
+
+The application should stay running unless you manually shut it down now, and you can interact with it on terminal.
+
+You can see changes to the databases with MySQL Workbench, to delete a database manually go into mysql and use:
+`DROP DATABASE <database_name>`
 
 ***
 
-Make sure you've setup your database according to 
-<a href="https://github.com/glp02/tempest/wiki/Database-Setup-Entry">these</a>
-instructions.
-
-***
+<h3>Running the application</h3>
 
 To run the application, go into `src/main/java/com.sky.tempest/TempestApplication.java` and run the class.
 
